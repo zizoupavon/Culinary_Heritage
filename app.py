@@ -3,88 +3,50 @@ import google.generativeai as genai
 import PyPDF2
 import os
 
-# 1. SETUP PAGE CONFIGURATION
-st.set_page_config(page_title="Satvik Kitchen", page_icon="🌿")
+st.set_page_config(page_title="Debug Mode", page_icon="🔧")
 
-# 2. DEFINE FUNCTIONS
-def get_pdf_text(filename):
-    """Reads a PDF file and returns the text."""
-    try:
-        with open(filename, 'rb') as f:
-            pdf_reader = PyPDF2.PdfReader(f)
-            text = ""
-            for page in pdf_reader.pages:
-                text += page.extract_text()
-            return text
-    except FileNotFoundError:
-        return ""
+st.title("🔧 Debug & Fix Mode")
 
-# 3. HANDLE API KEY (The Secure Way)
-# Check if the key is stored in Streamlit Secrets
-if "GOOGLE_API_KEY" in st.secrets:
-    api_key = st.secrets["GOOGLE_API_KEY"]
-    # We don't need to show the input box if we have the key
-    st.sidebar.success("✅ API Key loaded securely")
+# --- DEBUG SECTION ---
+st.subheader("1. File Check")
+files_in_folder = os.listdir('.')
+st.write("Files found in this folder:", files_in_folder)
+
+if "satvik.pdf" in files_in_folder:
+    st.success("✅ 'satvik.pdf' is found!")
 else:
-    # Fallback: Ask the user for the key if it's not in secrets
-    st.sidebar.header("Kitchen Settings")
-    api_key = st.sidebar.text_input("Enter Google API Key", type="password")
+    st.error("❌ 'satvik.pdf' is MISSING. Please rename your file in GitHub to exactly 'satvik.pdf' (all lowercase).")
 
-st.sidebar.markdown("---")
-st.sidebar.markdown("### About")
-st.sidebar.info(
-    "This AI Chef uses 'The Hare Krsna Cookbook' to recommend "
-    "pure Satvik (No Onion/No Garlic) recipes based on your mood."
-)
+# --- API KEY SECTION ---
+st.subheader("2. API Key Check")
+api_key = st.sidebar.text_input("Paste your Google API Key here:", type="password")
 
-# 4. MAIN INTERFACE
-st.title("🌿 Satvik Heritage Chef")
-st.write("Tell me how you are feeling, or ask for a specific dish!")
+if not api_key:
+    st.warning("waiting for API key in the sidebar...")
 
-user_mood = st.text_input("What is your mood? (e.g., 'Need comfort food', 'Something sweet')")
+# --- THE APP LOGIC ---
+if st.button("Test the AI") and api_key:
+    try:
+        genai.configure(api_key=api_key)
+        model = genai.GenerativeModel('gemini-1.5-pro')
+        
+        # Try reading the PDF
+        pdf_text = ""
+        try:
+            with open("satvik.pdf", 'rb') as f:
+                reader = PyPDF2.PdfReader(f)
+                for page in reader.pages:
+                    pdf_text += page.extract_text()
+            st.success(f"✅ Successfully read {len(pdf_text)} characters from the book.")
+        except Exception as e:
+            st.error(f"❌ Could not read PDF: {e}")
+            st.stop()
 
-# 5. THE AI LOGIC
-if st.button("Get Recommendation") and user_mood:
-    if not api_key:
-        st.error("Please enter your Google API Key in the sidebar to start cooking!")
-    else:
-        with st.spinner("Consulting the Satvik cookbook..."):
-            try:
-                # Configure AI
-                genai.configure(api_key=api_key)
-                model = genai.GenerativeModel('gemini-1.5-pro')
+        # Try asking the AI
+        st.info("Asking Gemini to say hello...")
+        response = model.generate_content(f"The user wants a Satvik recipe. The book contains: {pdf_text[:1000]}... Suggest one dish.")
+        st.write("### AI Response:")
+        st.write(response.text)
 
-                # Load ONLY the Satvik Book
-                text_satvik = get_pdf_text("satvik.pdf")
-                
-                if len(text_satvik) < 100:
-                    st.error("I couldn't find 'satvik.pdf'! Make sure you uploaded it to GitHub.")
-                    st.stop()
-
-                # System Prompt
-                system_instruction = f"""
-                You are an expert culinary consultant specializing in ISKCON Satvik cooking.
-                You have access to 'The Hare Krsna Cookbook'.
-
-                STRICT DIETARY RULES:
-                - NO Meat, Fish, or Eggs.
-                - NO Onion or Garlic.
-                - NO Caffeine.
-
-                USER MOOD/QUERY: {user_mood}
-
-                INSTRUCTIONS:
-                1. Recommend ONE perfect dish from the provided cookbook text.
-                2. Explain WHY this dish fits the mood.
-                3. List ingredients and step-by-step instructions.
-                4. Maintain a warm, spiritual tone.
-                
-                CONTEXT FROM COOKBOOK:
-                """
-                
-                full_prompt = system_instruction + f"\n\nCONTENT OF SATVIK COOKBOOK:\n{text_satvik}"
-                response = model.generate_content(full_prompt)
-                st.markdown(response.text)
-
-            except Exception as e:
-                st.error(f"An error occurred: {e}")
+    except Exception as e:
+        st.error(f"❌ AI Error: {e}")
