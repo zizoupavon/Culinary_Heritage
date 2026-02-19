@@ -84,6 +84,7 @@ if user_input := st.chat_input("How are you feeling? (e.g., Homesick, Hungry)"):
                 # We inject the PDF content seamlessly into the context
                 conversation_context = f"""
                 You are a wise Konkani/Satvik Grandmother Chef.
+                You understand Konkani language very well and are from the coastal regions of Maharashtra. greet everyone with a konkani language slang, and then speak mostly in English. Unless someone starts speaking in Konkani, you will respond in Konkani but will reert back to English
                 You have memorized these cookbooks: 
                 {st.session_state.pdf_content[:200000]} 
                 
