@@ -12,7 +12,7 @@ with st.sidebar:
     api_key = st.text_input("Google API Key", type="password")
 
     st.header("2. What is Aichya Gavat")
-        "Translates to mothers village, and we specialize in curating delicious Satvik Recipes inspired from your mothers village, which conforms to your mood" 
+    st.write("It means your 'mothers village' - We specialize in curating delicious Satvik Recipes inspired from your mothers village, which conforms to your mood") 
     
     st.markdown("---")
     st.header("3. Upload Cookbooks")
