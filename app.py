@@ -51,7 +51,7 @@ if st.button("Get Recipe"):
         
         st.write("🤖 **Step 3: Connecting to Google AI...**")
         genai.configure(api_key=api_key)
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        model = genai.GenerativeModel('gemini-2.5-flash')
         
         st.write("⏳ **Step 4: Waiting for Answer (This takes 10-20 seconds)...**")
         prompt = f"""
