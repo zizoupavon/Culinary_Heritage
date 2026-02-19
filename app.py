@@ -4,7 +4,7 @@ import PyPDF2
 
 # 1. PAGE SETUP
 st.set_page_config(page_title="Satvik Chef", page_icon="🥥")
-st.title("🥥 Amgelo Satvik Heritage Chefu")
+st.title("🥥 Tichya Mayla Satvik Heritage Chefu")
 
 # 2. SIDEBAR - SETUP
 with st.sidebar:
