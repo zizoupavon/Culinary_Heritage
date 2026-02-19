@@ -4,15 +4,18 @@ import PyPDF2
 
 # 1. PAGE SETUP
 st.set_page_config(page_title="Satvik Chef", page_icon="🥥")
-st.title("🥥 Tichya Mayla Satvik Heritage Chefu")
+st.title("🥥 Aichya Gavat Satvik Heritage Chef")
 
 # 2. SIDEBAR - SETUP
 with st.sidebar:
     st.header("1. Kitchen Setup")
     api_key = st.text_input("Google API Key", type="password")
+
+    st.header("2. What is Aichya Gavat")
+        "Translates to mothers village, and we specialize in curating delicious Satvik Recipes inspired from your mothers village, which conforms to your mood" 
     
     st.markdown("---")
-    st.header("2. Upload Cookbooks")
+    st.header("3. Upload Cookbooks")
     uploaded_files = st.file_uploader(
         "Upload Rasachandrika & ISKCON PDFs", 
         type=["pdf"], 
