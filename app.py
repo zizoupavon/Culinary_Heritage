@@ -3,8 +3,8 @@ import google.generativeai as genai
 import PyPDF2
 
 # 1. PAGE SETUP
-st.set_page_config(page_title="Amgele & Satvik Chef", page_icon="🥥")
-st.title("🥥 Amgele & Satvik Heritage Chef")
+st.set_page_config(page_title="Satvik Chef", page_icon="🥥")
+st.title("🥥 Amgelo Satvik Heritage Chefu")
 
 # 2. SIDEBAR - SETUP
 with st.sidebar:
