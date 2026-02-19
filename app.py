@@ -51,7 +51,7 @@ if st.button("Get Recipe"):
         
         st.write("🤖 **Step 3: Connecting to Google AI...**")
         genai.configure(api_key=api_key)
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        mmodel = genai.GenerativeModel('gemini-1.5-flash-8b')
         
         st.write("⏳ **Step 4: Waiting for Answer (This takes 10-20 seconds)...**")
         prompt = f"""
@@ -69,3 +69,4 @@ if st.button("Get Recipe"):
         
     except Exception as e:
         st.error(f"❌ CRITICAL ERROR: {e}")
+        
