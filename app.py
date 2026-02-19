@@ -3,70 +3,103 @@ import google.generativeai as genai
 import PyPDF2
 
 # 1. PAGE SETUP
-st.set_page_config(page_title="Satvik Chef", page_icon="🥥")
-st.title("🥥 Satvik Heritage Chef (Debug Mode)")
+st.set_page_config(page_title="Amgele & Satvik Chef", page_icon="🥥")
+st.title("🥥 Amgele & Satvik Heritage Chef")
 
-# 2. SIDEBAR
-st.sidebar.header("1. Settings")
-api_key = st.sidebar.text_input("Google API Key", type="password")
-uploaded_file = st.sidebar.file_uploader("Upload PDF", type=["pdf"])
-
-# 3. DIAGNOSTICS ON SCREEN
-st.write("---")
-st.write("### 🩺 System Status:")
-
-if api_key:
-    st.success("✅ API Key detected.")
-else:
-    st.error("❌ API Key is MISSING. Please paste it in the sidebar and hit ENTER.")
-
-if uploaded_file:
-    st.success(f"✅ File detected: {uploaded_file.name}")
-else:
-    st.error("❌ PDF is MISSING. Please drag your file to the sidebar.")
-
-# 4. INPUT
-user_mood = st.text_input("How are you feeling?", placeholder="Type here (e.g. Hungry)...")
-
-# 5. BUTTON LOGIC WITH PRINTOUTS
-if st.button("Get Recipe"):
-    st.write("📝 **Step 1: Button Clicked...**")
+# 2. SIDEBAR - SETUP
+with st.sidebar:
+    st.header("1. Kitchen Setup")
+    api_key = st.text_input("Google API Key", type="password")
     
-    if not user_mood:
-        st.error("❌ Error: You must type a mood above!")
+    st.markdown("---")
+    st.header("2. Upload Cookbooks")
+    uploaded_files = st.file_uploader(
+        "Upload Rasachandrika & ISKCON PDFs", 
+        type=["pdf"], 
+        accept_multiple_files=True
+    )
+    
+    # Button to Clear Conversation
+    if st.button("Start New Conversation"):
+        st.session_state.chat_history = []
+        st.session_state.pdf_content = ""
+        st.rerun()
+
+# 3. INITIALIZE CHAT MEMORY (SESSION STATE)
+if "chat_history" not in st.session_state:
+    st.session_state.chat_history = []
+if "pdf_content" not in st.session_state:
+    st.session_state.pdf_content = ""
+
+# 4. PROCESS PDFS ONLY ONCE
+if uploaded_files and st.session_state.pdf_content == "":
+    with st.spinner("Crunching the cookbooks..."):
+        text_data = ""
+        for uploaded_file in uploaded_files:
+            try:
+                pdf_reader = PyPDF2.PdfReader(uploaded_file)
+                for page in pdf_reader.pages:
+                    text_data += page.extract_text()
+            except Exception as e:
+                st.error(f"Error reading {uploaded_file.name}: {e}")
+        
+        st.session_state.pdf_content = text_data
+        st.success("✅ Cookbooks Memorized! You can now chat.")
+
+# 5. DISPLAY CHAT HISTORY
+# This loop draws the previous messages every time the app reloads
+for message in st.session_state.chat_history:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
+
+# 6. CHAT INPUT (The actual text box at the bottom)
+if user_input := st.chat_input("How are you feeling? (e.g., Homesick, Hungry)"):
+    
+    # A. Check for API Key
+    if not api_key:
+        st.error("Please enter your API Key in the sidebar first!")
         st.stop()
-        
-    if not api_key or not uploaded_file:
-        st.error("❌ Error: Missing Key or File (see status above).")
+
+    # B. Check for PDFs
+    if not st.session_state.pdf_content:
+        st.error("Please upload your PDF cookbooks first!")
         st.stop()
-        
-    # PROCESS
-    try:
-        st.write("📖 **Step 2: Reading PDF...**")
-        pdf_reader = PyPDF2.PdfReader(uploaded_file)
-        text_content = ""
-        for page in pdf_reader.pages:
-            text_content += page.extract_text()
-        st.success(f"✅ PDF Read! Found {len(text_content)} characters.")
-        
-        st.write("🤖 **Step 3: Connecting to Google AI...**")
-        genai.configure(api_key=api_key)
-        model = genai.GenerativeModel('gemini-2.5-flash')
-        
-        st.write("⏳ **Step 4: Waiting for Answer (This takes 10-20 seconds)...**")
-        prompt = f"""
-        You are a Satvik Chef. User mood: {user_mood}.
-        Recommend a recipe from this text:
-        {text_content[:200000]} 
-        """
-        # Note: We limit text to 200k chars just to be safe for MVP speed
-        
-        response = model.generate_content(prompt)
-        st.success("✅ Answer Received!")
-        
-        st.markdown("### 🍛 Recommendation:")
-        st.markdown(response.text)
-        
-    except Exception as e:
-        st.error(f"❌ CRITICAL ERROR: {e}")
-        
+
+    # C. Display User Message
+    with st.chat_message("user"):
+        st.markdown(user_input)
+    st.session_state.chat_history.append({"role": "user", "content": user_input})
+
+    # D. Generate AI Response
+    with st.chat_message("assistant"):
+        with st.spinner("Thinking..."):
+            try:
+                genai.configure(api_key=api_key)
+                
+                # Note: I changed the model to 'gemini-1.5-flash' which is standard. 
+                # If you have access to Pro, change 'flash' to 'pro'.
+                model = genai.GenerativeModel('gemini-2.5-flash') 
+
+                # We construct the chat history for Gemini
+                # We inject the PDF content seamlessly into the context
+                conversation_context = f"""
+                You are a wise Konkani/Satvik Grandmother Chef.
+                You have memorized these cookbooks: 
+                {st.session_state.pdf_content[:200000]} 
+                
+                Current Conversation History:
+                {st.session_state.chat_history}
+                
+                User just said: {user_input}
+                
+                Answer the user. If you need to clarify (e.g., "Do you want spicy?"), ask them.
+                """
+                
+                response = model.generate_content(conversation_context)
+                st.markdown(response.text)
+                
+                # Save AI answer to memory
+                st.session_state.chat_history.append({"role": "assistant", "content": response.text})
+                
+            except Exception as e:
+                st.error(f"An error occurred: {e}")
