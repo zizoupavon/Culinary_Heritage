@@ -17,7 +17,7 @@ with st.sidebar:
     st.markdown("---")
     st.header("3. Upload Cookbooks")
     uploaded_files = st.file_uploader(
-        "Upload Rasachandrika & ISKCON PDFs", 
+        "Upload any PDF's of your family recipes, handwritten by your grandma or video's or url's you find interesting online and we will spin a Satvik recipe for you", 
         type=["pdf"], 
         accept_multiple_files=True
     )
