@@ -67,12 +67,13 @@ if user_input := st.chat_input("How are you feeling? (e.g., Homesick, Hungry)"):
     """if not st.session_state.pdf_content:
         st.error("Please upload your PDF cookbooks first!")
         st.stop()"""
-
-    has_pdf = False
+        
+    st.session_state.pdf_content:
+        has_pdf = False
     if st.session_state.get("pdf_content"):
-    has_pdf = True
-else:
-    st.info("No PDF uploaded. I'll answer using my general knowledge!")
+        has_pdf = True
+    else:
+        st.info("No PDF uploaded. I'll answer using my general knowledge!")
 
     # C. Display User Message
     with st.chat_message("user"):
