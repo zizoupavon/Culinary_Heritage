@@ -4,15 +4,15 @@ import PyPDF2
 
 # 1. PAGE SETUP
 st.set_page_config(page_title="Satvik Chef", page_icon="🥥")
-st.title("🥥 Aichya Gavat Satvik Heritage Chef")
+st.title("🥥 Goel Family recipe")
 
 # 2. SIDEBAR - SETUP
 with st.sidebar:
     st.header("1. Kitchen Setup")
     api_key = st.text_input("Google API Key", type="password")
 
-    st.header("2. What is Aichya Gavat")
-    st.write("It means your 'mothers village' - We specialize in curating delicious Satvik Recipes inspired from your mothers village, which conforms to your mood") 
+    st.header("2. What would arjuns white friends mom made/")
+    st.write("probably craft singles breaded somethign kuljit said") 
     
     st.markdown("---")
     st.header("3. Upload Cookbooks")
@@ -64,9 +64,15 @@ if user_input := st.chat_input("How are you feeling? (e.g., Homesick, Hungry)"):
         st.stop()
 
     # B. Check for PDFs
-    if not st.session_state.pdf_content:
+    """if not st.session_state.pdf_content:
         st.error("Please upload your PDF cookbooks first!")
-        st.stop()
+        st.stop()"""
+
+    has_pdf = False
+    if st.session_state.get("pdf_content"):
+    has_pdf = True
+else:
+    st.info("No PDF uploaded. I'll answer using my general knowledge!")
 
     # C. Display User Message
     with st.chat_message("user"):
