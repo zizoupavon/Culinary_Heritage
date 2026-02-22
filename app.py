@@ -4,15 +4,15 @@ import PyPDF2
 
 # 1. PAGE SETUP
 st.set_page_config(page_title="Satvik Chef", page_icon="🥥")
-st.title("🥥 Goel Family recipe")
+st.title("🥥 Moti and Gudiya's Family recipe")
 
 # 2. SIDEBAR - SETUP
 with st.sidebar:
     st.header("1. Kitchen Setup")
     api_key = st.text_input("Google API Key", type="password")
 
-    st.header("2. What would arjuns white friends mom made/")
-    st.write("probably craft singles breaded somethign kuljit said") 
+    st.header("2. Why is this special?")
+    st.write("Cause whats more important than good food, a lovely family and friends like Kuljit, Amit, Milin and Plum to share it with") 
     
     st.markdown("---")
     st.header("3. Upload Cookbooks")
