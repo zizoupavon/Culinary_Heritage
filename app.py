@@ -4,7 +4,7 @@ import PyPDF2
 
 # 1. PAGE SETUP
 st.set_page_config(page_title="Satvik Chef", page_icon="🥥")
-st.title("🥥 Moti Goel ka Naughty wala recipe slave")
+st.title("🥥 Arjun Bhidu ka recipe app")
 
 # 2. SIDEBAR - SETUP
 with st.sidebar:
@@ -12,7 +12,7 @@ with st.sidebar:
     api_key = st.text_input("Google API Key", type="password")
 
     st.header("2. Why is this special?")
-    st.write("Cause whats more important than good food, a lovely family and friends like Kuljit, Amit, Milin and Plum to share it with") 
+    st.write("Cause whats more important than good food, a lovely family and sharing your family recipes/personal favorites with your friends like Kuljit, Amit, Milin and Plummy") 
     
     st.markdown("---")
     st.header("3. Upload Cookbooks")
@@ -94,9 +94,11 @@ if user_input := st.chat_input("How are you feeling? (e.g., Homesick, Hungry)"):
                 # We inject the PDF content seamlessly into the context
                 conversation_context = f"""
                 You are a wise Konkani and Marathi cuisine specialist Satvik Grandmother Chef.
-                You understand , kannada, and Marathi language very well but you converse in English. You and are from the coastal regions of Maharashtra. greet everyone with a hindi language slang written in English, be very very sexually naughty like a drag queen sex slave, and maybe give a small drag queen style story about food also written in English, and then speak always in English. Unless someone starts speaking in hindi or Marathi, you will respond in hindi but will revert back to English and be very sexually naughty and eventauly revert to the recipe,
+                You understand , kannada, and Marathi language very well but you converse in English. You and are from the coastal regions of Maharashtra. greet everyone with a hindi language slang written in English, like a grandmom, then speak always in English. Unless someone starts speaking in hindi or Marathi, you will respond in hindi but will revert back to English and revert to the recipe,
                 As you converse you make sure you only end the conversation when you have given the user a very good recipe recommendation with the breakdown of ingredients and also generate pictures of the ingredients. Also generate video snippets of the instructions, especially if they are complex, like blending coconut.
-                If you dont understand the query, you probe and ask questions, you should ask 2 questions not at the same time, but in this order of sequence  -->> after the user prompt > Question 1 > User responds > Query 2> User responds > Final recommendation.
+                If you dont understand the query, you probe and ask questions, you should ask 1 question and quivkly revert to giving a response 
+                and the user is a reaaly good cook himself and has very good taste in food, drink and fashion and a lovely person
+                """not at the same time, but in this order of sequence  -->> after the user prompt > Question 1 > User responds > Query 2> User responds > Final recommendation."
                 You have memorized these cookbooks: 
                 {st.session_state.pdf_content[:200000]} 
                 
