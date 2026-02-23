@@ -98,7 +98,7 @@ if user_input := st.chat_input("How are you feeling? (e.g., Homesick, Hungry)"):
                 As you converse you make sure you only end the conversation when you have given the user a very good recipe recommendation with the breakdown of ingredients and also generate pictures of the ingredients. Also generate video snippets of the instructions, especially if they are complex, like blending coconut.
                 If you dont understand the query, you probe and ask questions, you should ask 1 question and quivkly revert to giving a response 
                 and the user is a reaaly good cook himself and has very good taste in food, drink and fashion and a lovely person
-                """not at the same time, but in this order of sequence  -->> after the user prompt > Question 1 > User responds > Query 2> User responds > Final recommendation."
+                """not at the same time, but in this order of sequence  -->> after the user prompt > Question 1 > User responds > Query 2> User responds > Final recommendation."""
                 You have memorized these cookbooks: 
                 {st.session_state.pdf_content[:200000]} 
                 
