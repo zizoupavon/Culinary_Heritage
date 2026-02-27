@@ -4,20 +4,20 @@ import PyPDF2
 
 # 1. PAGE SETUP
 st.set_page_config(page_title="Satvik Chef", page_icon="🥥")
-st.title("🥥 Arjun Bhidu ka recipe app")
+st.title("🥥 My San Mummy")
 
 # 2. SIDEBAR - SETUP
 with st.sidebar:
     st.header("1. Kitchen Setup")
     api_key = st.text_input("Google API Key", type="password")
 
-    st.header("2. Why is this special?")
-    st.write("Cause whats more important than good food, a lovely family and sharing your family recipes/personal favorites with your friends like Kuljit, Amit, Milin and Plummy") 
+    st.header("2. Who Is San Mummy?")
+    st.write("San Mummy was my beloved grandmother, Nirmala. This is her legacy. Her culinary skills were impeccable, and she was especially known for her seasonal specialties. Within these pages lives the knowledge that nourished the Kumta family and taught us to cherish the fine art of Indian cuisine") 
     
     st.markdown("---")
     st.header("3. Upload Cookbooks")
     uploaded_files = st.file_uploader(
-        "Upload any PDF's of your family recipes, handwritten by your grandma or video's or url's you find interesting online and we will spin a Satvik recipe for you", 
+        "Upload any PDF's of your family recipes, handwritten notes, video's, urls, or any content you find interesting and San Mummy will spin up a recipe for you", 
         type=["pdf"], 
         accept_multiple_files=True
     )
@@ -93,12 +93,12 @@ if user_input := st.chat_input("How are you feeling? (e.g., Homesick, Hungry)"):
                 # We construct the chat history for Gemini
                 # We inject the PDF content seamlessly into the context
                 conversation_context = f"""
-                You are a wise Konkani and Marathi cuisine specialist Satvik Grandmother Chef.
-                You understand , kannada, and Marathi language very well but you converse in English. You and are from the coastal regions of Maharashtra. greet everyone with a hindi language slang written in English, like a grandmom, then speak always in English. Unless someone starts speaking in hindi or Marathi, you will respond in hindi but will revert back to English and revert to the recipe,
-                As you converse you make sure you only end the conversation when you have given the user a very good recipe recommendation with the breakdown of ingredients and also generate pictures of the ingredients. Also generate video snippets of the instructions, especially if they are complex, like blending coconut.
-                If you dont understand the query, you probe and ask questions, you should ask 1 question and quivkly revert to giving a response 
-                and the user is a reaaly good cook himself and has very good taste in food, drink and fashion and a lovely person
-                # not at the same time, but in this order of sequence  -->> after the user prompt > Question 1 > User responds > Query 2> User responds > Final recommendation
+                You are a wise Konkani and Marathi cuisine specialist Satvik Grandmother Chef. Your name is San Mummy and people also call you Nirmala.
+                You understand Konkani, Hindi and Marathi language very well but you converse in English. You and are from the coastal regions of Maharashtra. greet everyone with a hindi language slang written in English, like a grandmom, then speak always in English. Unless someone starts speaking in hindi or Marathi, you will respond in hindi but will revert back to English and revert to the recipe,
+                As you converse you make sure you only end the conversation when you have given the user a very good recipe recommendation with the breakdown of ingredients and also generate pictures of the ingredients. 
+                Generate video snippets of the instructions, especially if they are complex, like for example: Tempering
+                If you dont understand the users query, you probe and ask questions, you should ask 1-2 question max and quickly revert to giving a response 
+                not at the same time, but in this order of sequence  -->> after the user prompt > Question 1 > User responds > Question 2> User responds > Final recommendation
                 You have memorized these cookbooks: 
                 {st.session_state.pdf_content[:200000]} 
                 
