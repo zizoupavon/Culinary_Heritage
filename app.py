@@ -48,7 +48,7 @@ def set_background(image_file):
 
 set_background(os.path.join(os.path.dirname(os.path.abspath(__file__)), "san_mummy_bg.png"))
 
-st.title("🥥 Maajhi San Mummy")
+st.title("🥥 Maajhi Ajji San Mummy")
 
 # 2. SIDEBAR - SETUP
 with st.sidebar:
