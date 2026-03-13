@@ -9,38 +9,46 @@ st.set_page_config(page_title="Satvik Chef", page_icon="🥥")
 
 # BACKGROUND IMAGE
 def set_background(image_file):
+    image_file = os.path.abspath(image_file)
     if os.path.exists(image_file):
         with open(image_file, "rb") as f:
             encoded = base64.b64encode(f.read()).decode()
         st.markdown(
             f"""
             <style>
-            .stApp {{
+            [data-testid="stAppViewContainer"] {{
                 background-image: url("data:image/png;base64,{encoded}");
                 background-size: cover;
-                background-position: center;
+                background-position: center top;
                 background-attachment: fixed;
+                background-repeat: no-repeat;
             }}
-            .stApp::before {{
+            [data-testid="stAppViewContainer"]::before {{
                 content: "";
                 position: fixed;
                 top: 0; left: 0;
                 width: 100%; height: 100%;
-                background: rgba(0, 0, 0, 0.52);
+                background: rgba(0, 0, 0, 0.55);
                 z-index: 0;
             }}
-            .block-container {{
+            [data-testid="stAppViewContainer"] > div {{
                 position: relative;
                 z-index: 1;
+            }}
+            [data-testid="stHeader"] {{
+                background: rgba(0, 0, 0, 0) !important;
+            }}
+            [data-testid="stSidebar"] {{
+                background: rgba(15, 8, 3, 0.88) !important;
             }}
             </style>
             """,
             unsafe_allow_html=True,
         )
 
-set_background(os.path.join(os.path.dirname(__file__), "san_mummy_bg.png"))
+set_background(os.path.join(os.path.dirname(os.path.abspath(__file__)), "san_mummy_bg.png"))
 
-st.title("🥥 Maajhi Ajji - San Mummy")
+st.title("🥥 Maajhi San Mummy")
 
 # 2. SIDEBAR - SETUP
 with st.sidebar:
@@ -187,4 +195,3 @@ Completion: You must not end the conversation until the final recipe, ingredient
                 
             except Exception:
                 pass
-
