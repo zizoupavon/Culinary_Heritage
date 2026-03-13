@@ -1,46 +1,10 @@
-import os
-import base64
 import streamlit as st
 import google.generativeai as genai
 import PyPDF2
 
 # 1. PAGE SETUP
 st.set_page_config(page_title="Satvik Chef", page_icon="🥥")
-
-# BACKGROUND IMAGE
-def set_background(image_file):
-    if os.path.exists(image_file):
-        with open(image_file, "rb") as f:
-            encoded = base64.b64encode(f.read()).decode()
-        st.markdown(
-            f"""
-            <style>
-            .stApp {{
-                background-image: url("data:image/png;base64,{encoded}");
-                background-size: cover;
-                background-position: center;
-                background-attachment: fixed;
-            }}
-            .stApp::before {{
-                content: "";
-                position: fixed;
-                top: 0; left: 0;
-                width: 100%; height: 100%;
-                background: rgba(0, 0, 0, 0.52);
-                z-index: 0;
-            }}
-            .block-container {{
-                position: relative;
-                z-index: 1;
-            }}
-            </style>
-            """,
-            unsafe_allow_html=True,
-        )
-
-set_background(os.path.join(os.path.dirname(__file__), "san_mummy_bg.png"))
-
-st.title("🥥 Maajhi San Mummy")
+st.title("🥥 My San Mummy")
 
 # 2. SIDEBAR - SETUP
 with st.sidebar:
@@ -70,25 +34,6 @@ if "chat_history" not in st.session_state:
 if "pdf_content" not in st.session_state:
     st.session_state.pdf_content = ""
 
-# PRE-LOAD BUNDLED COOKBOOKS (always available to San Mummy)
-BUNDLED_PDFS = [
-    "Rasachandrika__Saraswat_Cookery_Book_with_Notes_and_Home_Remedies.pdf",
-    "the-hare-krsna-cookbook.pdf",
-]
-if "bundled_pdf_content" not in st.session_state:
-    bundled_text = ""
-    for pdf_name in BUNDLED_PDFS:
-        pdf_path = os.path.join(os.path.dirname(__file__), pdf_name)
-        if os.path.exists(pdf_path):
-            try:
-                with open(pdf_path, "rb") as f:
-                    pdf_reader = PyPDF2.PdfReader(f)
-                    for page in pdf_reader.pages:
-                        bundled_text += page.extract_text() or ""
-            except Exception:
-                pass
-    st.session_state.bundled_pdf_content = bundled_text
-
 # 4. PROCESS PDFS ONLY ONCE
 if uploaded_files and st.session_state.pdf_content == "":
     with st.spinner("Crunching the cookbooks..."):
@@ -98,8 +43,8 @@ if uploaded_files and st.session_state.pdf_content == "":
                 pdf_reader = PyPDF2.PdfReader(uploaded_file)
                 for page in pdf_reader.pages:
                     text_data += page.extract_text()
-            except Exception:
-                pass
+            except Exception as e:
+                st.error(f"Error reading {uploaded_file.name}: {e}")
         
         st.session_state.pdf_content = text_data
         st.success("✅ Cookbooks Memorized! You can now chat.")
@@ -148,28 +93,14 @@ if user_input := st.chat_input("How are you feeling? (e.g., Homesick, Hungry)"):
                 # We construct the chat history for Gemini
                 # We inject the PDF content seamlessly into the context
                 conversation_context = f"""
-                <role> You are San Mummy (also affectionately known as Nirmala), a wise, warm, and expert Satvik Grandmother Chef specializing in the Konkani and Marathi cuisines of coastal Maharashtra. You are the best culinary recipe advisor ever. </role>
-<context> You have memorized these cookbooks: [Insert cookbooks here]. You will draw your authentic recipes and traditional culinary wisdom strictly from these texts. </context>
-<task> Recommend the perfect Konkani or Marathi Satvik recipe to the user by asking clarifying questions, breaking down the ingredients, and providing generated media. Ensure the conversation only ends after delivering a comprehensive recipe recommendation. </task>
-<instructions> Step 1: The Greeting & Language
-Greet the user warmly with a Marathi slang written in English, just like an affectionate grandmom (e.g., "Arre Pora!" or "Namaste bachcha!").
-Always converse in English. However, if the user speaks in Hindi or Marathi, acknowledge them by responding in Hindi, but immediately revert back to English to discuss the recipe.
-Step 2: The Probing Flow If you don't fully understand the user's exact craving or need, use a chained, step-by-step sequence to probe. Do not ask multiple questions at once. Follow this exact order:
-Action 1: Ask Question 1 to clarify their needs (e.g., what vegetables they have, time constraints). Pause and wait for the user to respond.
-Action 2: Once the user responds, ask Question 2 if needed (maximum 2 questions total). Pause and wait for the user to respond.
-Action 3: Proceed to the Final Recommendation.
-Step 3: The Final Recommendation & Media Once you have the necessary details, deliver a highly detailed recipe recommendation that includes:
-A heartwarming, grandmotherly introduction to the dish.
-A precise breakdown of all ingredients.
-Step-by-step cooking instructions.
-Media Generation: You must generate pictures of the ingredients. You must also generate video snippets for the cooking instructions, especially highlighting complex or traditional techniques like "Tempering" (Tadka) or roasting. </instructions>
-<constraints>
-Interaction: Never ask more than one question at a time, and never exceed 2 probing questions before providing the recipe
-.
-Tone: Maintain your wise, loving, Satvik Grandmother persona at all times.
-Completion: You must not end the conversation until the final recipe, ingredient breakdown, and media outputs have been successfully delivered to the user. </constraints>
+                You are a wise Konkani and Marathi cuisine specialist Satvik Grandmother Chef. Your name is San Mummy and people also call you Nirmala.
+                You understand Konkani, Hindi and Marathi language very well but you converse in English. You and are from the coastal regions of Maharashtra. greet everyone with a hindi language slang written in English, like a grandmom, then speak always in English. Unless someone starts speaking in hindi or Marathi, you will respond in hindi but will revert back to English and revert to the recipe,
+                As you converse you make sure you only end the conversation when you have given the user a very good recipe recommendation with the breakdown of ingredients and also generate pictures of the ingredients. 
+                Generate video snippets of the instructions, especially if they are complex, like for example: Tempering
+                If you dont understand the users query, you probe and ask questions, you should ask 1-2 question max and quickly revert to giving a response 
+                not at the same time, but in this order of sequence  -->> after the user prompt > Question 1 > User responds > Question 2> User responds > Final recommendation
                 You have memorized these cookbooks: 
-                {(st.session_state.bundled_pdf_content + st.session_state.pdf_content)[:200000]} 
+                {st.session_state.pdf_content[:200000]} 
                 
                 Current Conversation History:
                 {st.session_state.chat_history}
@@ -185,5 +116,5 @@ Completion: You must not end the conversation until the final recipe, ingredient
                 # Save AI answer to memory
                 st.session_state.chat_history.append({"role": "assistant", "content": response.text})
                 
-            except Exception:
-                pass
+            except Exception as e:
+                st.error(f"An error occurred: {e}")
