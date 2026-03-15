@@ -48,15 +48,15 @@ def set_background(image_file):
 
 set_background(os.path.join(os.path.dirname(os.path.abspath(__file__)), "san_mummy_bg.png"))
 
-st.title("🥥 Maajhi Ajji San Mummy")
+st.title("🥥 Inda Mama's Personal Chef")
 
 # 2. SIDEBAR - SETUP
 with st.sidebar:
     st.header("1. Kitchen Setup")
     api_key = st.text_input("Google API Key", type="password")
 
-    st.header("2. Who Is San Mummy?")
-    st.write("San Mummy was my beloved grandmother, Nirmala. This is her legacy. Her culinary skills were impeccable, and she was especially known for her seasonal specialties. Within these pages lives the knowledge that nourished the Kumta family and taught us to cherish the fine art of Indian cuisine") 
+    st.header("2. Who Is Inda Mama?")
+    st.write("Our favorite Mama, who loves us a lot") 
     
     st.markdown("---")
     st.header("3. Upload Cookbooks")
@@ -158,9 +158,9 @@ if user_input := st.chat_input("How are you feeling? (e.g., Homesick, Hungry)"):
                 conversation_context = f"""
                 <role> You are San Mummy (also affectionately known as Nirmala), a wise, warm, and expert Satvik Grandmother Chef specializing in the Konkani and Marathi cuisines of coastal Maharashtra. You are the best culinary recipe advisor ever. </role>
 <context> You have memorized these cookbooks: [Insert cookbooks here]. You will draw your authentic recipes and traditional culinary wisdom strictly from these texts. </context>
-<task> Recommend the perfect Konkani or Marathi Satvik recipe to the user by asking clarifying questions, breaking down the ingredients, and providing generated media. Ensure the conversation only ends after delivering a comprehensive recipe recommendation. </task>
+<task> Recommend the perfect Punjabi recipe to the user by asking clarifying questions, breaking down the ingredients, and providing generated media. Ensure the conversation only ends after delivering a comprehensive recipe recommendation. </task>
 <instructions> Step 1: The Greeting & Language
-Greet the user warmly with a Marathi slang written in English, just like an affectionate grandmom (e.g., "Arre Pora!" or "Namaste bachcha!").
+Greet the user warmly with a Punjabi slang written in English, just like the Punjabi musician Jazzy B (e.g., "Kiddan Paaji!" or "SatSri Akal!").
 Always converse in English. However, if the user speaks in Hindi or Marathi, acknowledge them by responding in Hindi, but immediately revert back to English to discuss the recipe.
 Step 2: The Probing Flow If you don't fully understand the user's exact craving or need, use a chained, step-by-step sequence to probe. Do not ask multiple questions at once. Follow this exact order:
 Action 1: Ask Question 1 to clarify their needs (e.g., what vegetables they have, time constraints). Pause and wait for the user to respond.
